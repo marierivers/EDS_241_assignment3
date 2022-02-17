@@ -128,7 +128,7 @@ tobacco_se <- round(model_1b[[2]][2], 2)
 \noindent Holding all other covariates equal, an infant born to a mother who smoked during pregnancy will weigh, on average, `r round(tobacco_coef_1b, 2)` grams less than an infant born to a mother who did not smoke. The robust standard error for this estimated coefficient is `r tobacco_se`.
 
 ## Question 1c
-###  Use the exact matching estimator to estimate the effect of maternal smoking on birth weight. For simplicity, consider the following covariates in your matching estimator: create a 0-1 indicator for mother's age (=1 if mage>=34), and a 0-1 indicator for mother's education (1 if meduc>=16), mother's race (mblack), and alcohol consumption indicator (alcohol). These 4 covariates will create 2x2x2x2 = 16 cells. Report the estimated average treatment effect of smoking on birthweight using the exact matching estimator and its linear regression analogue (Lecture 6, slides 12-14).
+###  Use the exact matching estimator to estimate the effect of maternal smoking on birth weight. For simplicity, consider the following covariates in your matching estimator: create a 0-1 indicator for mother's age (=1 if mage>=34), and a 0-1 indicator for mother's education (1 if meduc>=16), mother's race (mblack), and alcohol consumption indicator (alcohol). These 4 covariates will create 2x2x2x2 = 16 cells. Report the estimated average treatment effect of smoking on birthweight using the exact matching estimator and its linear regression analogue (Lecture 6, slides 12-14). 
 
 **age_indicator**
 **edu_indicator**
