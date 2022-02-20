@@ -114,6 +114,7 @@ ggplot(data = data, aes(x = as.factor(tobacco), y = birthwgt)) +
   geom_boxplot() +
   labs(x = "indicator for maternal smoking", y = "birth weight of infant (grams")
 ```
+
 \newpage
 ```{r}
 model_1b <- lm_robust(formula = birthwgt ~ tobacco + mage + meduc + anemia + diabete + alcohol + mblack + first, data=data)
@@ -125,7 +126,7 @@ tobacco_coef_1b <- abs(model_1b$coefficients[2])
 tobacco_se <- round(model_1b[[2]][2], 2)
 ```
 
-\noindent Holding all other covariates equal, an infant born to a mother who smoked during pregnancy will weigh, on average, `r round(tobacco_coef_1b, 2)` grams less than an infant born to a mother who did not smoke. The robust standard error for this estimated coefficient is `r tobacco_se`.
+\noindent Holding all other covariates equal, an infant born to a mother who smoked during pregnancy will weigh, on average, `r round(tobacco_coef_1b, 2)` grams less than an infant born to a mother who did not smoke. The robust standard error for this estimated coefficient is `r tobacco_se`. While this model controls for a number of corvariates, it does not include covariates such as mother's drug use and mother's size.
 
 ## Question 1c
 ###  Use the exact matching estimator to estimate the effect of maternal smoking on birth weight. For simplicity, consider the following covariates in your matching estimator: create a 0-1 indicator for mother's age (=1 if mage>=34), and a 0-1 indicator for mother's education (1 if meduc>=16), mother's race (mblack), and alcohol consumption indicator (alcohol). These 4 covariates will create 2x2x2x2 = 16 cells. Report the estimated average treatment effect of smoking on birthweight using the exact matching estimator and its linear regression analogue (Lecture 6, slides 12-14). 
@@ -170,7 +171,7 @@ ATT <- sum((TIA_table$w_ATT)*(TIA_table$birthwgt_diff))
 ATT
 ```
 
-\noindent The estimated average treatment effect of smoking on birth weight using the exact matching estimator is `r round(ATE, 2)` grams. Since this value is negative, smoking results in decreased birth weight. 
+\noindent The estimated average treatment effect of smoking on birth weight using the exact matching estimator is `r round(ATE, 2)` grams. Since this value is negative, smoking results in decreased birth weight. The magnitude of the effect using the exact matching method is smaller than the effect when estimated using linear regression and controlling for other covariates (part 1b). The magnitude of the effect is largest when using uadjusted mean difference or linear regression without controling for other covariates (part 1a).
 
 ## Question  1d
 ### Estimate the propensity score for maternal smoking using a logit estimator and based on the following specification: mother’s age, mother’s age squared, mother’s education, and indicators for mother’s race, and alcohol consumption. 
@@ -178,7 +179,7 @@ ATT
 data_1d <- data %>% 
   mutate(mage_squared = mage^2)
 ```
-
+\newpage
 ```{r}
 model_1d <- glm(tobacco ~ mage + mage_squared + meduc + mblack + alcohol, family = binomial(), data = data_1d)
 huxreg("tobacco" = model_1d)
@@ -190,6 +191,7 @@ EPS <- predict(model_1d, type = "response")
 
 ps_weight <- (data_1d$tobacco / EPS) + ((1 - data_1d$tobacco) / (1 - EPS))
 ```
+The `ps_weight` dataframe includes propensity scores for each observation.
 
 ## Question 1e
 ### Use the propensity score weighted regression (WLS) to estimate the effect of maternal smoking on birth weight (Lecture 7, slide 12).
@@ -204,6 +206,6 @@ tobacco_coef_1e <- round(model_wls$coefficients[2], 2)
 ```
 
 
-\noindent The estimated effect of maternal smoking on birth weight using a propensity score weighted regression (WLS) is `r tobacco_coef_1e` grams. As with the models above, the model estimates that smoking results in decreased birth weight.  
+\noindent The estimated effect of maternal smoking on birth weight using a propensity score weighted regression (WLS) is `r tobacco_coef_1e` grams. As with the models above, the model estimates that smoking results in decreased birth weight. This method results in the smallest magnitude effect of maternal smoking on birth weight. 
 
 ### Note: This homework is a simple examination of these data. More research would be needed to obtain a more definitive assessment of the causal effect of smoking on infant health outcomes. Further, for this homework, you can ignore the adjustments to the standard errors that are necessary to reflect the fact that the propensity score is estimated. Just use heteroskedasticity robust standard errors in R. If you are interested, you can read Imbens and Wooldridge (2009) and Imbens (2014) for discussions of various approaches and issues with standard error estimations in models based on the propensity score.
